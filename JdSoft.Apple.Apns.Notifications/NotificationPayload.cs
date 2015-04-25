@@ -19,6 +19,8 @@ namespace JdSoft.Apple.Apns.Notifications
 
 		public string Sound { get; set; }
 
+        public string Category { get; set; }
+
 		public bool HideActionButton { get; set; }
 
 		public Dictionary<string, object[]> CustomItems
@@ -104,6 +106,12 @@ namespace JdSoft.Apple.Apns.Notifications
 
 			if (this.Badge.HasValue)
 				aps["badge"] = new JValue(this.Badge.Value);
+
+            if (!string.IsNullOrEmpty(this.Alert.Title))
+                aps["title"] = new JValue(this.Alert.Title);
+
+            if (!string.IsNullOrEmpty(this.Category))
+                aps["category"] = new JValue(this.Category);
 
 			if (!string.IsNullOrEmpty(this.Sound))
 				aps["sound"] = new JValue(this.Sound);

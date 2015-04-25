@@ -16,11 +16,21 @@ namespace JdSoft.Apple.Apns.Notifications
 		/// </summary>
 		public NotificationAlert()
 		{
+            Title = null;
 			Body = null;
 			ActionLocalizedKey = null;
 			LocalizedKey = null;
 			LocalizedArgs = new List<object>();
 		}
+
+        /// <summary>
+        /// Title Text of the Notification's Alert
+        /// </summary>
+        public string Title
+        {
+            get;
+            set;
+        }
 
 		/// <summary>
 		/// Body Text of the Notification's Alert
@@ -71,6 +81,7 @@ namespace JdSoft.Apple.Apns.Notifications
 			get
 			{
 				if (!string.IsNullOrEmpty(Body)
+                    || !string.IsNullOrEmpty(Title)
 					|| !string.IsNullOrEmpty(ActionLocalizedKey)
 					|| !string.IsNullOrEmpty(LocalizedKey)
 					|| (LocalizedArgs != null && LocalizedArgs.Count > 0))

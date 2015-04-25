@@ -21,12 +21,12 @@ namespace JdSoft.Apple.Apns.Notifications
         public DateTime? Expiration { get; set; }
 		public const int DEVICE_TOKEN_BINARY_SIZE = 32;
 		public const int DEVICE_TOKEN_STRING_SIZE = 64;
-		public const int MAX_PAYLOAD_SIZE = 256;
         public static readonly DateTime DoNotStore = DateTime.MinValue;
         private static readonly DateTime UNIX_EPOCH = new DateTime(1970, 1, 1, 0, 0, 0, DateTimeKind.Utc);
 
 		public Notification()
 		{
+            MaxPayloadSize = 256;
 		    DeviceToken = string.Empty;
 		    Payload = new NotificationPayload();
 		}
@@ -36,7 +36,8 @@ namespace JdSoft.Apple.Apns.Notifications
 			if (!string.IsNullOrEmpty(deviceToken) && deviceToken.Length != DEVICE_TOKEN_STRING_SIZE)
 				throw new BadDeviceTokenException(deviceToken);
 
-			DeviceToken = deviceToken;
+            MaxPayloadSize = 256;
+            DeviceToken = deviceToken;
 			Payload = new NotificationPayload();
 		}
 
@@ -45,9 +46,19 @@ namespace JdSoft.Apple.Apns.Notifications
 			if (!string.IsNullOrEmpty(deviceToken) && deviceToken.Length != DEVICE_TOKEN_STRING_SIZE)
 				throw new BadDeviceTokenException(deviceToken);
 
-			DeviceToken = deviceToken;
+            MaxPayloadSize = 256;
+            DeviceToken = deviceToken;
 			Payload = payload;
 		}
+
+        /// <summary>
+        /// Gets or sets the max payload size.
+        /// </summary>
+        public int MaxPayloadSize
+        {
+            get;
+            set;
+        }
 
 		/// <summary>
 		/// Object for storing state.  This does not affect the actual notification!
@@ -114,9 +125,9 @@ namespace JdSoft.Apple.Apns.Notifications
 			byte[] deviceTokenSize = BitConverter.GetBytes(IPAddress.HostToNetworkOrder(Convert.ToInt16(deviceToken.Length)));
 
 			byte[] payload = Encoding.UTF8.GetBytes(Payload.ToJson());
-			if (payload.Length > MAX_PAYLOAD_SIZE)
+			if (payload.Length > MaxPayloadSize)
 			{
-				int newSize = Payload.Alert.Body.Length - (payload.Length - MAX_PAYLOAD_SIZE);
+                int newSize = Payload.Alert.Body.Length - (payload.Length - MaxPayloadSize);
 				if (newSize > 0)
 				{
 					Payload.Alert.Body = Payload.Alert.Body.Substring(0, newSize);
@@ -129,11 +140,11 @@ namespace JdSoft.Apple.Apns.Notifications
 						Payload.Alert.Body = Payload.Alert.Body.Remove(Payload.Alert.Body.Length - 1);
 						payload = Encoding.UTF8.GetBytes(Payload.ToString());
 					}
-					while (payload.Length > MAX_PAYLOAD_SIZE && !string.IsNullOrEmpty(Payload.Alert.Body));
+                    while (payload.Length > MaxPayloadSize && !string.IsNullOrEmpty(Payload.Alert.Body));
 				}
 
-				if (payload.Length > MAX_PAYLOAD_SIZE)
-					throw new NotificationLengthException(this);
+                if (payload.Length > MaxPayloadSize)
+                    throw new NotificationLengthException(this, this.MaxPayloadSize);
 			}
 			byte[] payloadSize = BitConverter.GetBytes(IPAddress.HostToNetworkOrder(Convert.ToInt16(payload.Length)));
 
