@@ -123,10 +123,21 @@ namespace JdSoft.Apple.Apns.Notifications
 
 			foreach (string key in this.CustomItems.Keys)
 			{
-				if (this.CustomItems[key].Length == 1)
-					json[key] = new JValue(this.CustomItems[key][0]);
-				else if (this.CustomItems[key].Length > 1)
-					json[key] = new JArray(this.CustomItems[key]);
+                if (this.CustomItems[key].Length == 1)
+                {
+                    var value = this.CustomItems[key][0];
+
+                    if (value is JToken)
+                    {
+                        json[key] = (JToken)value;
+                    }
+                    else
+                    {
+                        json[key] = new JValue(value);
+                    }
+                }
+                else if (this.CustomItems[key].Length > 1)
+                    json[key] = new JArray(this.CustomItems[key]);
 			}
 
 			string rawString = json.ToString(Newtonsoft.Json.Formatting.None, null);
