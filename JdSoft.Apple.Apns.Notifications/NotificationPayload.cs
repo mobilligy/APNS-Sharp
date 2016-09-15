@@ -75,6 +75,7 @@ namespace JdSoft.Apple.Apns.Notifications
 			if (!this.Alert.IsEmpty)
 			{
 				if (!string.IsNullOrEmpty(this.Alert.Body)
+					&& string.IsNullOrEmpty(this.Alert.Title)
 					&& string.IsNullOrEmpty(this.Alert.LocalizedKey)
 					&& string.IsNullOrEmpty(this.Alert.ActionLocalizedKey)
 					&& (this.Alert.LocalizedArgs == null || this.Alert.LocalizedArgs.Count <= 0)
@@ -94,6 +95,9 @@ namespace JdSoft.Apple.Apns.Notifications
 
 					if (!string.IsNullOrEmpty(this.Alert.Body))
 						jsonAlert["body"] = new JValue(this.Alert.Body);
+
+					if (!string.IsNullOrEmpty(this.Alert.Title))
+						jsonAlert["title"] = new JValue(this.Alert.Title);
 
 					if (this.HideActionButton)
 						jsonAlert["action-loc-key"] = new JValue((string)null);
