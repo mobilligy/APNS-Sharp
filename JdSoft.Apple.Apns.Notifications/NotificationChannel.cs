@@ -518,7 +518,7 @@ namespace JdSoft.Apple.Apns.Notifications
 
 			try
 			{
-				apnsStream.AuthenticateAsClient(this.Host, this.certificates, System.Security.Authentication.SslProtocols.Tls, false);
+				apnsStream.AuthenticateAsClient(this.Host, this.certificates, System.Security.Authentication.SslProtocols.Tls12, false);
 			}
 			catch (System.Security.Authentication.AuthenticationException ex)
 			{
