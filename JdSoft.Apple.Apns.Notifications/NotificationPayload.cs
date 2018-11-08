@@ -15,6 +15,8 @@ namespace JdSoft.Apple.Apns.Notifications
 
 		public int? ContentAvailable { get; set; }
 
+        public int? MutableContent { get; set; }
+
 		public int? Badge { get; set; }
 
 		public string Sound { get; set; }
@@ -122,6 +124,9 @@ namespace JdSoft.Apple.Apns.Notifications
 
 			if (this.ContentAvailable.HasValue)
 				aps["content-available"] = new JValue(this.ContentAvailable.Value);
+
+            if (this.MutableContent.HasValue)
+                aps["mutable-content"] = new JValue(this.MutableContent.Value);
 
 			json["aps"] = aps;
 
